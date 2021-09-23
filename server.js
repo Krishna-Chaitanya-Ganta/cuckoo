@@ -6,13 +6,17 @@ const socket = require('socket.io')
 const io = socket(server)
 const username = require('username-generator')
 const path = require('path')
+const cors = require('cors')
+const uuidV4 = require('uuid').v4
 const { AwakeHeroku } = require('awake-heroku');
 
-AwakeHeroku.add({
-    url: "https://cuckooapp.herokuapp.com"
-})
-
 app.use(express.static('./client/build'));
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/join', (req,res) => {
+    res.send({ link: uuidV4() })
+})
 
 app.get('*', (req,res)=>{
     res.sendFile(path.resolve(__dirname, "client","build","index.html"));
