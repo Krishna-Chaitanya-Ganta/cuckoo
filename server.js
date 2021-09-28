@@ -8,7 +8,6 @@ const username = require('username-generator')
 const path = require('path')
 const cors = require('cors')
 const uuidV4 = require('uuid').v4
-const { AwakeHeroku } = require('awake-heroku');
 
 app.use(express.static('./client/build'));
 app.use(cors());
