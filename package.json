@@ -7,7 +7,6 @@
   "author": "Somik Datta <developersomik@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "awake-heroku": "^1.0.17",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "socket.io": "^2.4.0",

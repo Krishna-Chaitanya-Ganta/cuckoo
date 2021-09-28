@@ -382,15 +382,22 @@ body {
   object-fit: cover;
 }
 
-.controlsContainer{
+.controlsContainer {
   position: absolute;
   bottom: 0;
   align-items: center;
-  justify-content: space-around;
   height: 4rem;
-  z-index: 999;
   width: 100vw;
+  justify-content: space-around;
+  z-index: 999;
   background-color: rgba(0,0,0,0.1);
+  opacity: 0;
+}
+
+.controlsContainer:hover {
+  transition: all .6s ease;
+  -webkit-transition: all .6s ease;
+  opacity: 1;
 }
 
 .iconContainer{

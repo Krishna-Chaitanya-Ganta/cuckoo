@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef, Suspense } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import Rodal from 'rodal'
-import {Howl} from 'howler'
+// import {Howl} from 'howler'
 
 import Navigation from './Components/Navigation/Navigation'
 import Footer from './Components/Footer/Footer'
@@ -11,21 +12,12 @@ import  'rodal/lib/rodal.css'
 
 import camera from './Icons/camera.svg'
 import camerastop from './Icons/camera-stop.svg'
-import microphone from './Icons/microphone.svg'
-import microphonestop from './Icons/microphone-stop.svg'
+// import microphone from './Icons/microphone.svg'
+// import microphonestop from './Icons/microphone-stop.svg'
 import share from './Icons/share.svg'
 import hangup from './Icons/hang-up.svg'
 import fullscreen from './Icons/fullscreen.svg'
 import minimize from './Icons/minimize.svg'
-import ringtone from './Sounds/ringtone.mp3'
-
-const Watermark = React.lazy(()=>import('./Components/Watermark/Watermark'))
-
-const ringtoneSound = new Howl({
-  src: [ringtone],
-  loop: true,
-  preload: true
-})
 
 function App() {
   const [yourID, setYourID] = useState("");
@@ -40,7 +32,7 @@ function App() {
   const [receiverID, setReceiverID] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
   const [modalMessage, setModalMessage] = useState('')
-  const [audioMuted, setAudioMuted] = useState(false)
+  // const [audioMuted, setAudioMuted] = useState(false)
   const [videoMuted, setVideoMuted] = useState(false)
   const [isfullscreen, setFullscreen] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -70,6 +62,7 @@ function App() {
             <div className="callBox flex">
                 <input type="text" placeholder="Friend ID" value={receiverID} onChange={e => setReceiverID(e.target.value)} className="form-input"/>
                 <button onClick={() => callPeer(receiverID.toLowerCase().trim())} className="primaryButton">Call</button>
+                <button>Join</button>
             </div>
             <div>
                 To call your friend, ask them to open Cuckoo in their browser. <br/>
@@ -95,15 +88,15 @@ function App() {
 
     socket.current.on("hey", (data) => {
       setReceivingCall(true);
-      ringtoneSound.play();
       setCaller(data.from);
       setCallerSignal(data.signal);
     })
   }, []);
 
   function callPeer(id) {
+    console.log(users)
     if(id!=='' && users[id] && id!==yourID){
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
         setStream(stream);
         setCallingFriend(true)
         setCaller(id)
@@ -114,51 +107,16 @@ function App() {
           initiator: true,
           trickle: false,
           config: {
-    
             iceServers: [
-                // {
-                //     urls: "stun:numb.viagenie.ca",
-                //     username: "sultan1640@gmail.com",
-                //     credential: "98376683"
-                // },
-                // {
-                //     urls: "turn:numb.viagenie.ca",
-                //     username: "sultan1640@gmail.com",
-                //     credential: "98376683"
-                // }
-                {url:'stun:stun01.sipphone.com'},
-                {url:'stun:stun.ekiga.net'},
-                {url:'stun:stun.fwdnet.net'},
-                {url:'stun:stun.ideasip.com'},
-                {url:'stun:stun.iptel.org'},
-                {url:'stun:stun.rixtelecom.se'},
-                {url:'stun:stun.schlund.de'},
-                {url:'stun:stun.l.google.com:19302'},
-                {url:'stun:stun1.l.google.com:19302'},
-                {url:'stun:stun2.l.google.com:19302'},
-                {url:'stun:stun3.l.google.com:19302'},
-                {url:'stun:stun4.l.google.com:19302'},
-                {url:'stun:stunserver.org'},
-                {url:'stun:stun.softjoys.com'},
-                {url:'stun:stun.voiparound.com'},
-                {url:'stun:stun.voipbuster.com'},
-                {url:'stun:stun.voipstunt.com'},
-                {url:'stun:stun.voxgratia.org'},
-                {url:'stun:stun.xten.com'},
                 {
-                url: 'turn:numb.viagenie.ca',
-                credential: 'muazkh',
-                username: 'webrtc@live.com'
+                  urls: 'turn:88.99.68.153:3478?transport=tcp',
+                  credential: 'admin',
+                  username: 'root'
                 },
                 {
-                url: 'turn:192.158.29.39:3478?transport=udp',
-                credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                username: '28224511:1379330808'
-                },
-                {
-                url: 'turn:192.158.29.39:3478?transport=tcp',
-                credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                username: '28224511:1379330808'
+                  urls: 'turn:88.99.68.153:3478?transport=udp',
+                  credential: 'admin',
+                  username: 'root'
                 }
             ]
         },
@@ -206,16 +164,30 @@ function App() {
   }
 
   function acceptCall() {
-    ringtoneSound.unload();
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+    navigator.mediaDevices.getDisplayMedia({ cursor: true }).then(stream => {
       setStream(stream);
       if (userVideo.current) {
         userVideo.current.srcObject = stream;
       }
       setCallAccepted(true);
+      console.log(users)
       const peer = new Peer({
         initiator: false,
         trickle: false,
+        config: {
+          iceServers: [
+            {
+              urls: 'turn:88.99.68.153:3478?transport=tcp',
+              credential: 'admin',
+              username: 'root'
+            },
+            {
+              urls: 'turn:88.99.68.153:3478?transport=udp',
+              credential: 'admin',
+              username: 'root'
+            }
+          ]
+        },
         stream: stream,
       });
 
@@ -246,7 +218,6 @@ function App() {
   }
 
   function rejectCall(){
-    ringtoneSound.unload();
     setCallRejected(true)
     socket.current.emit('rejected', {to:caller})
     window.location.reload()
@@ -254,28 +225,35 @@ function App() {
 
   function endCall(){
     myPeer.current.destroy()
-    socket.current.emit('close',{to:caller})
+    //socket.current.emit('close',{to:caller})
     window.location.reload()
   }
 
   function shareScreen(){
-    navigator.mediaDevices.getDisplayMedia({cursor:true})
-    .then(screenStream=>{
-      myPeer.current.replaceTrack(stream.getVideoTracks()[0],screenStream.getVideoTracks()[0],stream)
-      userVideo.current.srcObject=screenStream
-      screenStream.getTracks()[0].onended = () =>{
-      myPeer.current.replaceTrack(screenStream.getVideoTracks()[0],stream.getVideoTracks()[0],stream)
-      userVideo.current.srcObject=stream
-      }
-    })
+    console.log(window.history)
+    if (myPeer.current.streams[0].active) {
+      console.log('enteredtoggle logic',myPeer.current);
+    } else {
+      navigator.mediaDevices.getDisplayMedia({cursor:true})
+      .then(screenStream=>{
+        console.log(stream.getVideoTracks()[0],screenStream.getVideoTracks()[0],stream)
+        myPeer.current.replaceTrack(stream.getVideoTracks()[0],screenStream.getVideoTracks()[0],stream)
+        userVideo.current.srcObject=screenStream
+        screenStream.getTracks()[0].onended = () =>{
+          myPeer.current.replaceTrack(screenStream.getVideoTracks()[0],stream.getVideoTracks()[0],stream)
+          userVideo.current.srcObject=stream
+        }
+      })
+    }
+    
   }
 
-  function toggleMuteAudio(){
-    if(stream){
-      setAudioMuted(!audioMuted)
-      stream.getAudioTracks()[0].enabled = audioMuted
-    }
-  }
+  // function toggleMuteAudio(){
+  //   if(stream){
+  //     setAudioMuted(!audioMuted)
+  //     stream.getAudioTracks()[0].enabled = audioMuted
+  //   }
+  // }
 
   function toggleMuteVideo(){
     if(stream){
@@ -343,16 +321,16 @@ function App() {
     )
   }
 
-  let audioControl;
-  if(audioMuted){
-    audioControl=<span className="iconContainer" onClick={()=>toggleMuteAudio()}>
-      <img src={microphonestop} alt="Unmute audio"/>
-    </span>
-  } else {
-    audioControl=<span className="iconContainer" onClick={()=>toggleMuteAudio()}>
-      <img src={microphone} alt="Mute audio"/>
-    </span>
-  }
+  // let audioControl;
+  // if(audioMuted){
+  //   audioControl=<span className="iconContainer" onClick={()=>toggleMuteAudio()}>
+  //     <img src={microphonestop} alt="Unmute audio"/>
+  //   </span>
+  // } else {
+  //   audioControl=<span className="iconContainer" onClick={()=>toggleMuteAudio()}>
+  //     <img src={microphone} alt="Mute audio"/>
+  //   </span>
+  // }
 
   let videoControl;
   if(videoMuted){
@@ -389,38 +367,43 @@ function App() {
 
   return (
     <>
-      <div style={{display: renderLanding()}}>
-        {landingHTML}
-        <Rodal 
-          visible={modalVisible} 
-          onClose={()=>setModalVisible(false)} 
-          width={20} 
-          height={5} 
-          measure={'em'}
-          closeOnEsc={true}
-        >
-          <div>{modalMessage}</div>
-        </Rodal>
-        {incomingCall}
-      </div>
-      <div className="callContainer" style={{display: renderCall()}}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Watermark/>
-        </Suspense>
-        <div className="partnerVideoContainer">
-          {PartnerVideo}
-        </div>
-        <div className="userVideoContainer">
-          {UserVideo}
-        </div>
-        <div className="controlsContainer flex">
-          {audioControl}
-          {videoControl}
-          {screenShare}
-          {fullscreenButton}
-          {hangUp}
-        </div>
-      </div>
+      <Router>
+        <Route path="/join">
+          <div style={{display: renderLanding()}}>
+            {landingHTML}
+            <Rodal 
+              visible={modalVisible} 
+              onClose={()=>setModalVisible(false)} 
+              width={20} 
+              height={5} 
+              measure={'em'}
+              closeOnEsc={true}
+            >
+              <div>{modalMessage}</div>
+            </Rodal>
+            {incomingCall}
+          </div>
+        </Route>
+        <Route path="/join">
+          <div className="callContainer" style={{display: renderCall()}}>
+            <Suspense fallback={<div>Loading...</div>}>
+            </Suspense>
+            <div className="partnerVideoContainer">
+              {PartnerVideo}
+            </div>
+            <div className="userVideoContainer">
+              {UserVideo}
+            </div>
+            <div className="controlsContainer flex">
+              {/* {audioControl} */}
+              {videoControl}
+              {screenShare}
+              {fullscreenButton}
+              {hangUp}
+            </div>   
+          </div>
+        </Route>
+      </Router>
     </>
   )
 }
