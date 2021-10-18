@@ -25,32 +25,47 @@ const users={}
 
 io.on('connection', socket => {
     //generate username against a socket connection and store it
-    const userid=username.generateUsername('-')
-    if(!users[userid]){
-        users[userid] = socket.id
-    }
+    // const userid=username.generateUsername('-')
+    // if(!users[userid]){
+    //     users[userid] = socket.id
+    // }
     //send back username
-    socket.emit('yourID', userid)
-    io.sockets.emit('allUsers', users)
+    // socket.emit('yourID', userid)
+    // io.sockets.emit('allUsers', users)
     
     socket.on('disconnect', ()=>{
-        delete users[userid]
+        //socket.to(meetingId).broadcast.emit('user-disconnected', {})
     })
 
     socket.on('callUser', (data)=>{
         io.to(users[data.userToCall]).emit('hey', {signal: data.signalData, from: data.from})
     })
 
-    socket.on('acceptCall', (data)=>{
-        io.to(users[data.to]).emit('callAccepted', data.signal)
-    })
+    // socket.on('acceptCall', (data)=>{
+    //     io.to(users[data.to]).emit('callAccepted', data.signal)
+    // })
 
     socket.on('close', (data)=>{
         io.to(users[data.to]).emit('close')
     })
-
+ 
     socket.on('rejected', (data)=>{
         io.to(users[data.to]).emit('rejected')
+    })
+
+    socket.on('meet', (data) => {
+        socket.join(data.meetingId)
+        if (!users[data.meetingId]) {
+            users[data.meetingId] = [data.peerId,data.data]
+        } else {
+            socket.to(data.meetingId).broadcast.emit('user-connected', {metaData:data.data})
+        }
+        // socket.to(data.meetingId).broadcast.emit('user-connected', {userId: data.peerId})
+    })
+
+    socket.on('screenShare',data => {
+        console.log(data)
+        socket.broadcast.emit('shareScreen', data.stream)
     })
 })
 

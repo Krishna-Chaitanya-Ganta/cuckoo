@@ -27,25 +27,25 @@ function App() {
   const [isfullscreen, setFullscreen] = useState(false)
   const [copied, setCopied] = useState(false)
   
-  function renderLanding() {
-    if(!callRejected && !callAccepted && !callingFriend)
-      return 'block'
-    return 'none'
-  }
+  // function renderLanding() {
+  //   if(!callRejected && !callAccepted && !callingFriend)
+  //     return 'block'
+  //   return 'none'
+  // }
 
-  function renderCall() {
-    if(!callRejected && !callAccepted && !callingFriend)
-      return 'none'
-    return 'block'
-  }
+  // function renderCall() {
+  //   if(!callRejected && !callAccepted && !callingFriend)
+  //     return 'none'
+  //   return 'block'
+  // }
 
-  function showCopiedMessage(){
-    navigator.clipboard.writeText(yourID)
-    setCopied(true)
-    setInterval(()=>{
-      setCopied(false)
-    },1000)
-  }
+  // function showCopiedMessage(){
+  //   navigator.clipboard.writeText(yourID)
+  //   setCopied(true)
+  //   setInterval(()=>{
+  //     setCopied(false)
+  //   },1000)
+  // }
 
   return (
     <>
