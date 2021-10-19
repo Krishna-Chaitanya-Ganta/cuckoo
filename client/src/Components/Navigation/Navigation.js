@@ -9,7 +9,7 @@ const Navigation = () => {
                 <div className="headerContainer flex">
                     <div className="headerLogoLinkWrapper">
                         <div className="headerLogoLink">
-                        <a href='/'>
+                        <a href='/join'>
                             <div className="headerLogo flex flex-row">
                                 <div className="logoImg">
                                     <img src={cuckoologo} alt="Cuckoo Logo"/>
