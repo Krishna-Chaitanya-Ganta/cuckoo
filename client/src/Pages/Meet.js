@@ -43,7 +43,6 @@ function Meet (props) {
   useEffect(() => {
     socket.current = io.connect("/");
     initializePeer();
-    console.log(myPeer.current._id)
 
     // socket.current.on("yourID", (id) => {
     //   setYourID(id);
@@ -119,7 +118,7 @@ function Meet (props) {
   //       })
   //     })
   //     .catch(()=>{
-        // setModalMessage('You cannot place/ receive a call without granting video and audio permissions! Please change your settings to use Cuckoo.')
+        // setModalMessage('You cannot place/ receive a call without granting video and audio permissions! Please change your settings to use screen share.')
         // setModalVisible(true)
   //     })
   //   } else {
