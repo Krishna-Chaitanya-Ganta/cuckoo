@@ -55,18 +55,9 @@ io.on('connection', socket => {
 
     socket.on('meet', (data) => {
         socket.join(data.meetingId)
-        if (!users[data.meetingId]) {
-            users[data.meetingId] = [data.peerId,data.data]
-        } else {
-            socket.to(data.meetingId).broadcast.emit('user-connected', {metaData:data.data})
-        }
-        // socket.to(data.meetingId).broadcast.emit('user-connected', {userId: data.peerId})
+        socket.to(data.meetingId).broadcast.emit('user-connected', {metaData:data.data})
     })
 
-    socket.on('screenShare',data => {
-        console.log(data)
-        socket.broadcast.emit('shareScreen', data.stream)
-    })
 })
 
 const port = process.env.PORT || 8000

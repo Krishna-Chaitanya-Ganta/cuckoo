@@ -38,10 +38,6 @@ function Join () {
               <input type="text" placeholder="Meeting ID" ref={meetingID} className="form-input" />
               <button onClick={joinMeetingHandler} className="primaryButton">Join</button>
             </div>
-            <div>
-              To call your friend, ask them to open Cuckoo in their browser. <br />
-              {/* Send your username (<span className="username">{yourID}</span>) and wait for their call <span style={{ fontWeight: 600 }}>OR</span> enter their username and hit call! */}
-            </div>
           </div>
         </div>
       </div>

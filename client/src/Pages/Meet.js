@@ -32,7 +32,7 @@ function Meet (props) {
   const [videoMuted, setVideoMuted] = useState(false);
   const [isfullscreen, setFullscreen] = useState(false);
   // const [copied, setCopied] = useState(false)
-  const [isShared, setshared] = useState(false)
+  const [isShared, setShared] = useState(false)
 
   const userVideo = useRef();
   const partnerVideo = useRef();
@@ -153,9 +153,9 @@ function Meet (props) {
 
     myPeer.current = peer
 
-    peer.on("connect", () => {
-      console.log("Connected to meeting",myPeer.current._id)
-    })
+    // peer.on("connect", (data) => {
+    //   console.log("Connected to meeting",data)
+    // })
 
     peer.on("signal", (data) => {
       socket.current.emit('meet', {meetingId: meetingID,peerId: myPeer.current._id,data: data})
@@ -169,11 +169,6 @@ function Meet (props) {
       endCall()
     })
 
-    socket.current.on('shareScreen', (stream) => {
-      console.log(stream)
-      partnerVideo.current.srcObject = stream;
-    })
-
     socket.current.on('user-connected', (signal) => {
       peer.signal(signal.metaData)
     })
@@ -182,18 +177,19 @@ function Meet (props) {
 
   function endCall(){
     myPeer.current.destroy()
-    window.location.reload()
+    window.location.href = "/join"
   }
 
   function shareScreen(){
     navigator.mediaDevices.getDisplayMedia({cursor:true})
     .then(screenStream=>{
+      setStream(screenStream);
       userVideo.current.srcObject = screenStream;
-      // partnerVideo.current.srcObject = screenStream;
-      socket.current.emit('screenShare', screenStream)
       myPeer.current.addTrack(screenStream.getVideoTracks()[0],screenStream)
+      setShared(true)
       screenStream.getTracks()[0].onended = () =>{
         console.log('Ended Stream')
+        setShared(false)
       }
     })
   }

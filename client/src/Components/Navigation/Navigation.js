@@ -1,6 +1,5 @@
 import React from 'react'
 import cuckoologo from '../../Icons/cuckoo-logo.svg'
-import GitHubButton from 'react-github-btn'
 import '../Navigation/Navigation.css'
 
 const Navigation = () => {
@@ -21,15 +20,6 @@ const Navigation = () => {
                             </div>
                         </a>
                         </div>
-                    </div>
-                    <div className="githubStar">
-                    <GitHubButton href="https://github.com/somikdatta/cuckoo" 
-                            data-color-scheme="no-preference: light; light: light; dark: dark;" 
-                            data-icon="octicon-star" data-size="large" data-show-count="true" 
-                            aria-label="Star somikdatta/cuckoo on GitHub"
-                    >
-                    Star
-                    </GitHubButton>
                     </div>
                 </div>
             </div>
